@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SparQ Login</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    label { display:block; font-size:14px; margin-bottom:6px; color:#94a3b8; }
+  </style>
+  <script>
+    async function doLogin(e){
+      e.preventDefault();
+      const form = e.currentTarget;
+      const fd = new FormData(form);
+      const username = fd.get('username');
+      const password = fd.get('password');
+      const params = new URLSearchParams(window.location.search);
+      const returnTo = params.get('returnTo') || params.get('rt') || '';
+      const err = document.getElementById('err');
+      err.style.display = 'none';
+      try {
+        const r = await fetch('/sso/login', { method:'POST', headers:{ 'Content-Type':'application/json' }, credentials:'include', body: JSON.stringify({ username, password, returnTo }) });
+        const j = await r.json();
+        if (!r.ok || !j.success) throw new Error(j.error || 'Login failed');
+        const rt = j.redirect || returnTo;
+        if (rt && /^https:\/\/(?:[\w-]+\.)*getsparqd\.com/.test(rt)) { window.location.href = rt; }
+        else { window.location.href = 'https://portal.getsparqd.com/dashboard'; }
+      } catch (e) {
+        err.textContent = e.message || 'Login failed';
+        err.style.display = 'block';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('login-form').addEventListener('submit', doLogin);
+    });
+  </script>
+</head>
+<body class="login-wrap">
+  <div class="login-card">
+    <h1 class="login-title">Welcome to SparQ</h1>
+    <p class="login-subtitle">Sign in to continue</p>
+    <div id="err" class="login-error"></div>
+    <form id="login-form">
+      <div class="mb-12">
+        <label for="username">Username or Email</label>
+        <input class="login-input" id="username" name="username" type="text" autocomplete="username" required />
+      </div>
+      <div class="mb-16">
+        <label for="password">Password</label>
+        <input class="login-input" id="password" name="password" type="password" autocomplete="current-password" required />
+      </div>
+      <button class="login-button" type="submit">Sign In</button>
+    </form>
+    <p class="login-muted">You’ll be redirected to your dashboard.</p>
+  </div>
+</body>
+</html>
