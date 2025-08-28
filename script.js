@@ -167,27 +167,62 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get form data
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
-            
-            // Simulate form submission
+            const fullName = `${(data.firstName||'').trim()} ${(data.lastName||'').trim()}`.trim();
+            const subject = `New Contact: ${data.services || 'General Inquiry'}${data.company ? ' - ' + data.company : ''} (${fullName || 'Unknown'})`;
+            const lines = [
+                `Name: ${fullName || '(no name)'}`,
+                `Email: ${data.email || '(unknown)'}`,
+                data.phone ? `Phone: ${data.phone}` : null,
+                data.company ? `Company: ${data.company}` : null,
+                data.website ? `Website: ${data.website}` : null,
+                data.services ? `Services: ${data.services}` : null,
+                data.budget ? `Budget: ${data.budget}` : null,
+                data.timeline ? `Timeline: ${data.timeline}` : null,
+                `Newsletter: ${data.newsletter ? 'Yes' : 'No'}`,
+                '---',
+                (data.message || '').toString()
+            ].filter(Boolean);
+            const payload = {
+                site: window.location.hostname,
+                name: fullName,
+                email: data.email,
+                phone: data.phone,
+                subject,
+                message: lines.join('\n')
+            };
+
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
             // Show loading state
             submitBtn.innerHTML = '<span class="loading"></span> Sending...';
             submitBtn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                // Show success message
+
+            // Send to portal contact endpoint
+            fetch('https://portal.getsparqd.com/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(async (resp) => {
+                if (!resp.ok) {
+                    const text = await resp.text().catch(()=>'');
+                    throw new Error(text || `Request failed (${resp.status})`);
+                }
+                return resp.json().catch(()=>({ ok: true }));
+            })
+            .then(() => {
                 showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
-                
-                // Reset form
                 this.reset();
-                
-                // Reset button
+            })
+            .catch((err) => {
+                console.warn('Contact submit failed', err);
+                showNotification('Sorry, we could not send your message. Please try again later.', 'error');
+            })
+            .finally(() => {
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-            }, 2000);
+            });
         });
     }
 
