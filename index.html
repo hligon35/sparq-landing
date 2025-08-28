@@ -3,17 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SparQ Digital - Igniting Your Digital Presence</title>
+    <title>Dream Websites. Real Results. | SparQ Digital</title>
+    <meta name="description" content="SparQ Digital builds high-performance websites and manages social media to help small businesses launch fast, rank higher, and convert more.">
+    <link rel="canonical" href="https://getsparqd.com/">
+    <meta name="keywords" content="web design, small business websites, SEO services, PPC advertising, social media management, digital marketing, SparQ Digital">
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SparQ Digital">
+    <meta property="og:title" content="Dream Websites. Real Results. | SparQ Digital">
+    <meta property="og:description" content="High-performance websites and social media management that drive real business results.">
+    <meta property="og:url" content="https://getsparqd.com/">
+    <meta property="og:image" content="https://getsparqd.com/images/og-cover.jpg">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dream Websites. Real Results.">
+    <meta name="twitter:description" content="High-performance websites and social media management.">
+    <meta name="twitter:image" content="https://getsparqd.com/images/og-cover.jpg">
+    <!-- Performance hints for Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Primary">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="SparQLogo.png" alt="SparQ Digital" class="logo-img">
+                <picture>
+                    <source srcset="SparQLogo.webp" type="image/webp">
+                    <img src="SparQLogo.png" alt="SparQ Digital" class="logo-img" decoding="async" fetchpriority="high">
+                </picture>
             </div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-link active">Home</a></li>
@@ -22,7 +44,7 @@
                 <li><a href="contact.html" class="nav-link">Contact</a></li>
                 <li><a href="https://portal.getsparqd.com/login.html" class="nav-link login-btn">Login</a></li>
             </ul>
-            <div class="hamburger">
+            <div class="hamburger" role="button" aria-label="Toggle menu" aria-expanded="false" tabindex="0">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -31,6 +53,7 @@
     </nav>
 
     <!-- Hero Section -->
+    <main id="main">
     <section class="hero">
         <div class="hero-content">
             <div class="hero-text">
@@ -140,11 +163,15 @@
     </section>
 
     <!-- Footer -->
+    </main>
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
-                    <img src="SparQLogo.png" alt="SparQ Digital" class="footer-logo">
+                    <picture>
+                        <source srcset="SparQLogo.webp" type="image/webp">
+                        <img src="SparQLogo.png" alt="SparQ Digital" class="footer-logo" loading="lazy" decoding="async">
+                    </picture>
                     <p>Igniting digital excellence, one spark at a time.</p>
                 </div>
                 <div class="footer-links">
@@ -183,6 +210,16 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+        <!-- Organization JSON-LD -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "SparQ Digital",
+            "url": "https://getsparqd.com/",
+            "logo": "https://getsparqd.com/images/SparQLogo.png"
+        }
+        </script>
+        <script src="script.js" defer></script>
 </body>
 </html>
