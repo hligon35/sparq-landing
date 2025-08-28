@@ -20,12 +20,30 @@
       const err = document.getElementById('err');
       err.style.display = 'none';
       try {
+        // 1) SSO login at apex (first-party cookies on .getsparqd.com)
         const r = await fetch('/sso/login', { method:'POST', headers:{ 'Content-Type':'application/json' }, credentials:'include', body: JSON.stringify({ username, password, returnTo }) });
         const j = await r.json();
         if (!r.ok || !j.success) throw new Error(j.error || 'Login failed');
+        // 2) If returnTo present and safe, honor it
         const rt = j.redirect || returnTo;
-        if (rt && /^https:\/\/(?:[\w-]+\.)*getsparqd\.com/.test(rt)) { window.location.href = rt; }
-        else { window.location.href = 'https://portal.getsparqd.com/dashboard'; }
+        const isSafe = (url) => /^https:\/\/(?:[\w-]+\.)*getsparqd\.com(?![^\s]*\s)/.test(url);
+        if (rt && isSafe(rt)) { window.location.href = rt; return; }
+        // 3) Otherwise, get role-based SparQ Plug entry URL from portal API and navigate
+        // Try both direct portal and /sso-prefixed paths to cover reverse-proxy setups
+        const candidates = [
+          'https://portal.getsparqd.com/api/sparqplug/url',
+          '/sso/../api/sparqplug/url'
+        ];
+        let url;
+        for (const u of candidates) {
+          try {
+            const pr = await fetch(u, { credentials:'include' });
+            if (pr.ok) { const pj = await pr.json(); if (pj && pj.url) { url = pj.url; break; } }
+          } catch (_) { /* try next */ }
+        }
+        if (url && isSafe(url)) { window.location.href = url; return; }
+        // 4) Fallback to portal dashboard
+        window.location.href = 'https://portal.getsparqd.com/dashboard';
       } catch (e) {
         err.textContent = e.message || 'Login failed';
         err.style.display = 'block';
