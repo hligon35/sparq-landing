@@ -188,7 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 email: data.email,
                 phone: data.phone,
                 subject,
-                message: lines.join('\n')
+                message: lines.join('\n'),
+                companyWebsite: data.companyWebsite || ''
             };
 
             const submitBtn = this.querySelector('button[type="submit"]');
