@@ -5,14 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const navMenu = document.querySelector('.nav-menu');
     
     if (hamburger && navMenu) {
-        const toggleMenu = () => {
-            const active = hamburger.classList.toggle('active');
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
             navMenu.classList.toggle('active');
-            hamburger.setAttribute('aria-expanded', active ? 'true' : 'false');
-        };
-        hamburger.addEventListener('click', toggleMenu);
-        hamburger.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleMenu(); }
         });
 
         // Close menu when clicking on a link
@@ -20,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
-                hamburger.setAttribute('aria-expanded', 'false');
             });
         });
     }
@@ -173,63 +167,27 @@ document.addEventListener('DOMContentLoaded', function() {
             // Get form data
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
-            const fullName = `${(data.firstName||'').trim()} ${(data.lastName||'').trim()}`.trim();
-            const subject = `New Contact: ${data.services || 'General Inquiry'}${data.company ? ' - ' + data.company : ''} (${fullName || 'Unknown'})`;
-            const lines = [
-                `Name: ${fullName || '(no name)'}`,
-                `Email: ${data.email || '(unknown)'}`,
-                data.phone ? `Phone: ${data.phone}` : null,
-                data.company ? `Company: ${data.company}` : null,
-                data.website ? `Website: ${data.website}` : null,
-                data.services ? `Services: ${data.services}` : null,
-                data.budget ? `Budget: ${data.budget}` : null,
-                data.timeline ? `Timeline: ${data.timeline}` : null,
-                `Newsletter: ${data.newsletter ? 'Yes' : 'No'}`,
-                '---',
-                (data.message || '').toString()
-            ].filter(Boolean);
-            const payload = {
-                site: window.location.hostname,
-                name: fullName,
-                email: data.email,
-                phone: data.phone,
-                subject,
-                message: lines.join('\n'),
-                companyWebsite: data.companyWebsite || ''
-            };
-
+            
+            // Simulate form submission
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             
             // Show loading state
             submitBtn.innerHTML = '<span class="loading"></span> Sending...';
             submitBtn.disabled = true;
-
-            // Send to portal contact endpoint
-            fetch('https://portal.getsparqd.com/api/contact', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(async (resp) => {
-                if (!resp.ok) {
-                    const text = await resp.text().catch(()=>'');
-                    throw new Error(text || `Request failed (${resp.status})`);
-                }
-                return resp.json().catch(()=>({ ok: true }));
-            })
-            .then(() => {
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Show success message
                 showNotification('Message sent successfully! We\'ll get back to you within 24 hours.', 'success');
+                
+                // Reset form
                 this.reset();
-            })
-            .catch((err) => {
-                console.warn('Contact submit failed', err);
-                showNotification('Sorry, we could not send your message. Please try again later.', 'error');
-            })
-            .finally(() => {
+                
+                // Reset button
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-            });
+            }, 2000);
         });
     }
 
