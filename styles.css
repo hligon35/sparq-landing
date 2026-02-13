@@ -1429,6 +1429,21 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .nav-container {
+        padding: 0.75rem 1rem;
+        min-height: 64px;
+    }
+
+    .logo-img {
+        height: 44px;
+        max-width: 160px;
+    }
+
+    /* Offset first-section content from fixed header on small screens */
+    .hero {
+        padding-top: 80px;
+    }
+
     .hamburger {
         display: flex;
     }
@@ -1503,9 +1518,35 @@ body {
         gap: 2rem;
     }
 
+    .footer-brand {
+        text-align: center;
+    }
+
+    .footer-brand .footer-logo {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .footer-links {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.25rem;
+        justify-content: center;
+        justify-items: center;
+    }
+
+    .footer-links .footer-section {
+        text-align: center;
+    }
+
+    .footer-links .footer-section:nth-child(3) {
+        grid-column: 1 / -1;
+        justify-self: center;
+        text-align: center;
+    }
+
+    .footer-links .footer-section:nth-child(3) .social-links {
+        justify-content: center;
     }
 
     .pricing-card.featured {
@@ -1531,7 +1572,20 @@ body {
     }
 
     .nav-container {
-        padding: 1rem;
+        padding: 0.6rem 0.75rem;
+        min-height: 58px;
+    }
+
+    .logo-img {
+        height: 40px;
+        max-width: 150px;
+    }
+
+    .footer-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        justify-content: center;
+        justify-items: center;
     }
 
     .hero-title {
